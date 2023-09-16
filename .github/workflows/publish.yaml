@@ -31,6 +31,7 @@ jobs:
           type=ref,event=pr
           type=semver,pattern=${{ steps.gitversion.outputs.semVer }}
           type=semver,pattern=${{ steps.gitversion.outputs.major }}.${{ steps.gitversion.outputs.minor }}
+          type=semver,pattern=${{ steps.gitversion.outputs.major }}
           type=raw,value=${{ steps.gitversion.outputs.semVer }}.${{ steps.gitversion.outputs.branchName }}-${{ steps.gitversion.outputs.buildMetaData }}-{{sha}}
           type=raw,value=${{ steps.gitversion.outputs.semVer }}.${{ steps.gitversion.outputs.branchName }}-${{ steps.gitversion.outputs.buildMetaData }}-${{ steps.gitversion.outputs.sha }}
 
