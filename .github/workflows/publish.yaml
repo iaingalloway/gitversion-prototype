@@ -1,0 +1,55 @@
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout (GitHub)
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Install GitVersion
+      uses: gittools/actions/gitversion/setup@v0.10
+      with:
+        versionSpec: 5.12.0
+
+    - name: Determine version using GitVersion
+      id: gitversion
+      uses: gittools/actions/gitversion/execute@v0.10
+
+    - name: Determine image tags using Docker metadata action
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: ghcr.io/${{ github.repository }}
+        tags: |
+          type=ref,event=branch
+          type=ref,event=pr
+          type=semver,pattern=${{ steps.gitversion.outputs.semVer }}
+          type=semver,pattern=${{ steps.gitversion.outputs.major }}.${{ steps.gitversion.outputs.minor }}
+          type=raw,value=${{ steps.gitversion.outputs.semVer }}.${{ steps.gitversion.outputs.branchName }}-${{ steps.gitversion.outputs.buildMetaData }}-{{sha}}
+          type=raw,value=${{ steps.gitversion.outputs.semVer }}.${{ steps.gitversion.outputs.branchName }}-${{ steps.gitversion.outputs.buildMetaData }}-${{ steps.gitversion.outputs.sha }}
+
+    - name: Setup Docker buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Authenticate with registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        file: src/Dockerfile
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
