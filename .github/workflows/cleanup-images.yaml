@@ -1,0 +1,21 @@
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  cleanup-images:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Delete untagged images
+      uses: actions/delete-package-versions@v4
+      with:
+        package-name: gitversion-prototype
+        package-type: container
+        delete-only-untagged-versions: true
+    - name: Delete untagged images
+      uses: snok/container-retention-policy@v2
+      with:
+        image-names: gitversion-prototype
+        cut-off: one day ago UTC
+        account-type: personal
+        token: ${{ secrets.GITHUB_TOKEN }}
