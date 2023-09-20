@@ -7,15 +7,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Delete untagged images
-      uses: actions/delete-package-versions@v4
+      uses: iaingalloway/devcontainers/.github/actions/delete-packages@main
       with:
-        package-name: gitversion-prototype
-        package-type: container
-        delete-only-untagged-versions: true
-    - name: Delete untagged images
-      uses: snok/container-retention-policy@v2
-      with:
-        image-names: gitversion-prototype
-        cut-off: one day ago UTC
-        account-type: personal
-        token: ${{ secrets.GITHUB_TOKEN }}
+        package-names: foo
+        retention-threshold: 1 week ago UTC
+        keep-at-least: 3
+        dry-run: true
