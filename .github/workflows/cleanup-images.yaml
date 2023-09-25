@@ -13,3 +13,4 @@ jobs:
         retention-threshold: 1 week ago UTC
         keep-at-least: 3
         dry-run: true
+        token: ${{ secrets.GITHUB_TOKEN }}
