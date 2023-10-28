@@ -18,7 +18,7 @@ Initialized empty Git repository in /home/iain/repos/gitversion-source-branches/
 
 > echo mode: Mainline > GitVersion.yaml
 
-> git add . && git commit -m "Initial commit" && git tag v1.0.0
+> git add . && git commit -m "Initial commit" && git t v1.0.0
 [main (root-commit) fb90cf6] Initial commit
  1 file changed, 1 insertion(+)
  create mode 100644 GitVersion.yaml
