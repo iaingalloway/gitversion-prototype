@@ -16,7 +16,7 @@ Initial testing of GitVersion:
 > mkdir gitversion-source-branches && cd gitversion-source-branches && git init
 Initialized empty Git repository in /home/iain/repos/gitversion-source-branches/.git/
 
-> echo mode: Mainline > GitVersion.yaml
+> echo mode: Mainline > GitVersion.yml
 
 > git add . && git commit -m "Initial commit" && git t v1.0.0
 [main (root-commit) fb90cf6] Initial commit
